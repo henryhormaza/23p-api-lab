@@ -6,7 +6,7 @@ import urllib.parse
 #Using blueprint to soport future API versions and routes management at __init__
 people_bp = Blueprint('people_bp',__name__)
 
-@people_bp.route('/people/<string:nationalId>',methods=['GET','PUT'])
+@people_bp.route('/people/<string:nationalId>',methods=['GET','PUT','DELETE'])
 def get_people_id(nationalId):
     #creating the object
     db_obj = sql_query.cls_sql(auth_64 = request.headers["Authorization"])
@@ -42,8 +42,6 @@ def get_people_id(nationalId):
                     db_obj.query_text = db_obj.j_body
                 else:
                     return "Content-Type not supported",400
-            except:
-                return "",500
             except:
                 return "Content-Type not supported",400
 
