@@ -9,7 +9,7 @@ people_bp = Blueprint('people_bp',__name__)
 @people_bp.route('/people/<string:nationalId>',methods=['GET','PUT'])
 def get_people_id(nationalId):
     #creating the object
-    db_obj = sql_query.cls_sql()
+    db_obj = sql_query.cls_sql(auth_64 = request.headers["Authorization"])
     response = {}
     try:
         if request.method == 'GET': #check API method  
@@ -18,7 +18,7 @@ def get_people_id(nationalId):
                 #Retrive all the names
                 #query
                 db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} 
-                                    where National_Id = '{nationalId}' '''
+                                    where nationalId = '{nationalId}' '''
                 response["results"]= db_obj.execute_read_query()
                 if response["results"] != []:
                     return response,200
@@ -30,13 +30,59 @@ def get_people_id(nationalId):
                 response["results"]=db_obj.execute_read_query()
                 return response,200
     except:
-        return "Not id found",404
+        return "Not found",404
+    
+    try:
+        if request.method == 'PUT': #check API method  
+            db_obj.create_table() 
+            #ask for auth in order to avoid usr and passwd burned in code            
+            db_obj.j_body = request.json
+            try:
+                if request.headers["Content-Type"] == "application/json":
+                    db_obj.query_text = db_obj.j_body
+                else:
+                    return "Content-Type not supported",400
+                except:
+                    return "",500
+            try:                
+                if nationalId != db_obj.j_body["nationalId"]:
+                    SameID=False
+            except:
+                SameID = True
+            try:         
+                #Update
+                for json_fields in db_obj.j_body:
+                    db_obj.query_text = f"""
+                                            UPDATE
+                                            {db_obj.table_name}
+                                            SET
+                                            {json_fields} = '{db_obj.j_body[json_fields]}'
+                                            WHERE
+                                            nationalId = '{nationalId}'
+                                            """
+                    db_obj.execute_query() 
+                    db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} '''
+                    response["results"]=db_obj.execute_read_query()
+                if response["results"] != [] and SameID:
+                    return response,200
+                elif not(SameID):
+                    return "Json nationalId different than SameID parameter provided",400
+                else:
+                    return "Not found",404
+            except:
+                #Retrive all the names
+                db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} '''
+                response["results"]=db_obj.execute_read_query()
+                return response,200
+    except:
+        return "Not found",404
+    
 
 #Provide info to api call
 @people_bp.route('/people',methods=['GET', 'POST'])
 def get_people():
     #creating the object
-    db_obj = sql_query.cls_sql()
+    db_obj = sql_query.cls_sql(auth_64 = request.headers["Authorization"])
     response = {}
     try:
         if request.method == 'GET': #check API method  
@@ -46,7 +92,7 @@ def get_people():
             response["results"]=db_obj.execute_read_query()
             return response,200
     except:
-        return "Not id found",404
+        return "Not found",404
 
     try:
         if request.method == 'POST': #check API method  
@@ -58,7 +104,7 @@ def get_people():
                     if request.headers["Content-Type"] == "application/json":
                         db_obj.query_text = db_obj.j_body
                     else:
-                        return "",400
+                        return "Content-Type not supported",400
                 except:
                     return "",500
 
@@ -70,13 +116,13 @@ def get_people():
                 #Add new record
                 db_obj.query_text =  f'''
                 INSERT INTO
-                `{db_obj.table_name}` (`National_Id`, `Name`, `Last_Name`, `Age`, `Picture_Url`)
+                `{db_obj.table_name}` (`nationalId`, `name`, `lastName`, `age`, `pictureUrl`)
                 VALUES 
                 ('{nationalId}', '{name}', '{lastName}', {age}, '{pictureUrl}')'''
                 
                 db_obj.execute_query() 
                 db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} 
-                                    where National_Id = '{nationalId}' '''
+                                    where nationalId = '{nationalId}' '''
                 response["results"]= []
                 response["results"]= db_obj.execute_read_query()                                 
                 if response["results"] != [] and db_obj.error == "":
@@ -90,7 +136,7 @@ def get_people():
                 #Retrive all the names
                 return response,400
     except:
-        return "Not id found",404
+        return "Not found",404
 
     
     
