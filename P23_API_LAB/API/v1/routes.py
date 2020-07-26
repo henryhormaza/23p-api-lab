@@ -42,8 +42,11 @@ def get_people_id(nationalId):
                     db_obj.query_text = db_obj.j_body
                 else:
                     return "Content-Type not supported",400
-                except:
-                    return "",500
+            except:
+                return "",500
+            except:
+                return "Content-Type not supported",400
+
             try:                
                 if nationalId != db_obj.j_body["nationalId"]:
                     SameID=False
@@ -74,6 +77,17 @@ def get_people_id(nationalId):
                 db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} '''
                 response["results"]=db_obj.execute_read_query()
                 return response,200
+    except:
+        return "Not found",404
+
+    try:
+            if request.method == 'DELETE': #check API method              
+                #ask for auth in order to avoid usr and passwd burned in code            
+                db_obj.j_body = request.json       
+                #Update
+                db_obj.query_text = f"""DELETE FROM {db_obj.table_name} WHERE nationalId = '{nationalId}' """
+                db_obj.execute_query()                 
+                return "Registry deleted",200
     except:
         return "Not found",404
     
