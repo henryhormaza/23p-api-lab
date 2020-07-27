@@ -1,14 +1,13 @@
-pipeline{
+pipeline {
     agent any
 
-
-    stage('Build_infra'){
-            
-            steps{
+    stages {
+        steps{
                 dir("${os_type}"+"Terraform/"){
                     sh "terraform init"
                     sh " terraform apply  -auto-approve "
                     sh " terraform output -json > output.json"                    
                 }
             }
-        }
+    }
+}
