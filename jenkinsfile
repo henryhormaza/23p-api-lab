@@ -2,12 +2,14 @@ pipeline {
     agent any
 
     stages {
-        steps{
-                dir("${os_type}"+"Terraform/"){
+        stage {
+            steps{
+                dir("${os_type}"+"/Terraform/"){
                     sh "terraform init"
                     sh " terraform apply  -auto-approve "
                     sh " terraform output -json > output.json"                    
                 }
             }
+        }
     }
 }
