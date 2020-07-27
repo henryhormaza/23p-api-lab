@@ -15,7 +15,6 @@ mysql_disk_size = 10
 mysql_instance_access_cidr = "0.0.0.0/0"
 db_name = "lab-db-23people"
 db_charset = "utf8_general_ci"
-# db_collation = ""
 db_user_name = "23people"
 db_user_host = "%"
 db_user_password = "23people"

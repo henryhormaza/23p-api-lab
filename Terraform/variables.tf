@@ -85,3 +85,8 @@ variable db_user_password {
   description = "db password for this lab"
   default = "23people"
 }
+# Output Vars
+output MySql_instance_IP {
+  description = "IP address of the master database instance"
+  value = google_sql_database_instance.MySql.ip_address.0.ip_address
+}

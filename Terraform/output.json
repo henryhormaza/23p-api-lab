@@ -1,0 +1,7 @@
+{
+  "MySql_instance_IP": {
+    "sensitive": false,
+    "type": "string",
+    "value": "146.148.50.52"
+  }
+}

@@ -54,3 +54,5 @@ resource "google_sql_user" "MySql" {
   host = var.db_user_host
   password = var.db_user_password
 }
+
+
