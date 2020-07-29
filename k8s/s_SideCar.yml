@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: p23
+spec:
+  selector:
+    matchLabels:
+      app: p23
+  template:
+    metadata:
+      labels:
+        app: p23
+    spec:
+      serviceAccountName: ksa-p23
+      containers:
+        - name: 23p-api-lab
+          ...
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          command:
+            - "/cloud_sql_proxy"
+            - "-instances=core-waters-284316:us-central1:people23=tcp:5432"

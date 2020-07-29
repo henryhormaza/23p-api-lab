@@ -7,6 +7,14 @@ variable "project" {
   type = string
   description = "Projec of Lab"
 }
+variable "gsa_name" {
+  type = string
+  description = "google service accont name"
+}
+variable "ksa_name" {
+  type = string
+  description = "kubernetes service account name"
+}
 variable "auth_file" {
   type = string
   description = "Cloud file with credentials"
@@ -85,8 +93,10 @@ variable db_user_password {
   description = "db password for this lab"
   default = "23people"
 }
+
 # Output Vars
 output MySql_instance_IP {
   description = "IP address of the master database instance"
   value = google_sql_database_instance.MySql.ip_address.0.ip_address
 }
+

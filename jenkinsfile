@@ -1,13 +1,38 @@
 pipeline {
+    
     agent any
 
     stages {
-        stage {
-            steps{
-                dir("${os_type}"+"/Terraform/"){
+        stage('Docker_Build') {
+            steps {
+                dir("Docker/"){
+                    sh "docker build -t 23p-api-lab:latest -f 23p-api-lab.dockerfile . --no-cache"                                       
+                }
+            }
+        }
+        stage('Docker_Push') {
+            steps {
+                dir("Docker/"){
+                    sh "docker tag $(docker images 23p-api-lab -q) us.gcr.io/core-waters-284316/23p-api-lab:latest"
+                    sh "docker push us.gcr.io/core-waters-284316/23p-api-lab:latest"                                       
+                }
+            }
+        }
+        stage('Build_infra') {
+            steps {
+                dir("Terraform/"){
                     sh "terraform init"
-                    sh " terraform apply  -auto-approve "
-                    sh " terraform output -json > output.json"                    
+                    sh "terraform apply  -auto-approve "
+                    sh "terraform output -json > output.json"                    
+                }
+            }
+        }
+        stage('Build_infra') {
+            steps {
+                dir("Terraform/"){
+                    sh "terraform init"
+                    sh "terraform apply  -auto-approve "
+                    sh "terraform output -json > output.json"                    
                 }
             }
         }

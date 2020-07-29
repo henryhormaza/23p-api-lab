@@ -1,0 +1,42 @@
+{
+    "kind": "Config",
+    "apiVersion": "v1",
+    "preferences": {},
+    "clusters": [
+        {
+            "name": "gke_core-waters-284316_us-central1_p23-cluster",
+            "cluster": {
+                "server": "https://146.148.110.60",
+                "certificate-authority-data": "DATA+OMITTED"
+            }
+        }
+    ],
+    "users": [
+        {
+            "name": "gke_core-waters-284316_us-central1_p23-cluster",
+            "user": {
+                "auth-provider": {
+                    "name": "gcp",
+                    "config": {
+                        "access-token": "ya29.c.KpYB1QeO60Ig_xwUX-TwzP5MuNC7mFlXiLbBawZshjCO1O9Jey8x7JP7TqlofmfSsVBJlwE5GACqUJ-80T302SbItVKNQxwqa8_5WS1Ovbhv6WuJ8YML1t3Zmey_Cwz_J0l2wvSsCwX3ibf_A_ge9oL-t_id7SzqkMeqXZ-iyCVNiaQefW3XJ507K8gC7G-fn4u_lp-R-N5C",
+                        "cmd-args": "config config-helper --format=json",
+                        "cmd-path": "/home/henry/google-cloud-sdk/bin/gcloud",
+                        "expiry": "2020-07-28T23:40:46Z",
+                        "expiry-key": "{.credential.token_expiry}",
+                        "token-key": "{.credential.access_token}"
+                    }
+                }
+            }
+        }
+    ],
+    "contexts": [
+        {
+            "name": "gke_core-waters-284316_us-central1_p23-cluster",
+            "context": {
+                "cluster": "gke_core-waters-284316_us-central1_p23-cluster",
+                "user": "gke_core-waters-284316_us-central1_p23-cluster"
+            }
+        }
+    ],
+    "current-context": "gke_core-waters-284316_us-central1_p23-cluster"
+}

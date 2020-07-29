@@ -3,6 +3,7 @@ from P23_API_LAB.API.v1.lib import sql_query
 import requests
 import json
 import urllib.parse
+import socket
 #Using blueprint to soport future API versions and routes management at __init__
 people_bp = Blueprint('people_bp',__name__)
 
@@ -151,8 +152,11 @@ def get_people():
         return "Not found",404
 
     
-    
-    
+@people_bp.route('/test',methods=['GET'])
+def test():
+    hostname = socket.gethostname()    
+    IPAddr = socket.gethostbyname(hostname)    
+    return f"2 I'm Alive new update, ipadd:{IPAddr} and the hostname:{hostname}",200
 
 
 
