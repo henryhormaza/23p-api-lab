@@ -7,39 +7,39 @@ terraform {
   }
 }
 
-resource "google_service_account" "gsa" {
-  account_id = var.gsa_name
-  project = "core-waters-284316"
-}
+#resource "google_service_account" "gsa" {
+#  account_id = var.gsa_name
+#  project = "core-waters-284316"
+#}
 
-resource "google_project_iam_member" "cloud-sql-client" {
-  project = var.project
-  role = "roles/cloudsql.client"
-  member = "serviceAccount:${google_service_account.gsa.email}"
-}
+#resource "google_project_iam_member" "cloud-sql-client" {
+#  project = var.project
+#  role = "roles/cloudsql.client"
+#  member = "serviceAccount:${google_service_account.gsa.email}"
+#}
 
-resource "kubernetes_service_account" "ksa" {
-  metadata {
-    name = var.ksa_name
-   annotations = {
-      "iam.gke.io/gcp-service-account" = google_service_account.gsa.email
-    }
-  }
-}
+#resource "kubernetes_service_account" "ksa" {
+#  metadata {
+#    name = var.ksa_name
+#   annotations = {
+#      "iam.gke.io/gcp-service-account" = google_service_account.gsa.email
+#    }
+#  }
+#}
 
-resource "google_service_account_iam_binding" "gke_gsa_ksa_binding" {
-  service_account_id = google_service_account.gsa.name
-  role = "roles/iam.workloadIdentityUser"
-  members = [
-    "serviceAccount:${var.project}.svc.id.goog[default/${var.ksa_name}]"
-  ]
-}
+#resource "google_service_account_iam_binding" "gke_gsa_ksa_binding" {
+#  service_account_id = google_service_account.gsa.name
+#  role = "roles/iam.workloadIdentityUser"
+#  members = [
+#    "serviceAccount:${var.project}.svc.id.goog[default/${var.ksa_name}]"
+#  ]
+#}
 
 
 
 # Kubernetes
 resource "google_container_cluster" "gke-cluster" {
-  provider = google-beta
+  provider = google
   name = var.gke_name
   network = var.gke_nw
   location = var.region
@@ -59,7 +59,35 @@ resource "google_container_cluster" "gke-cluster" {
   workload_identity_config {
     identity_namespace = "${var.project}.svc.id.goog"
   }
+  provisioner "local-exec"{
+    comand = "gcloud container clusters get-credentials ${self.name} --region ${var.region} --project ${var.project}"
+    comand = "kubectl create -f ../k8s/d_Pod.yml"
+    comand = "kubectl create -f ../k8s/s_Cluster.yml"
+    comand = "kubectl create -f k8s/s_NodePort.yml"
+    comand = "gcloud compute firewall-rules create p23-external-access --allow tcp:32532"
+  }
 }
+
+resource "google_compute_firewall" "default" {
+  name    = "test-firewall"
+  network = google_compute_network.default.name
+
+  allow {
+    protocol = "icmp"
+  }
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "8080", "1000-2000"]
+  }
+
+  source_tags = ["web"]
+}
+
+resource "google_compute_network" "default" {
+  name = "test-network"
+}
+
 # Mysql instance
 resource "google_sql_database_instance" "MySql" {
   name = var.mysql_name

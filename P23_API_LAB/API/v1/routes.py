@@ -63,7 +63,8 @@ def get_people_id(nationalId):
                                             nationalId = '{nationalId}'
                                             """
                     db_obj.execute_query() 
-                    db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} '''
+                    db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} 
+                                    where nationalId = '{nationalId}' '''
                     response["results"]=db_obj.execute_read_query()
                 if response["results"] != [] and SameID:
                     return response,200
@@ -73,9 +74,9 @@ def get_people_id(nationalId):
                     return "Not found",404
             except:
                 #Retrive all the names
-                db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} '''
-                response["results"]=db_obj.execute_read_query()
-                return response,200
+                #db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} '''
+                #response["results"]=db_obj.execute_read_query()
+                return "not found",500
     except:
         return "Not found",404
 

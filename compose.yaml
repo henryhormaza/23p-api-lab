@@ -1,3 +1,4 @@
+# this compose is just for local docket test
 version: '3.1'
 services:
     api-gw:
