@@ -2,16 +2,23 @@ pipeline {
   environment {
     registry = "us.gcr.io/alien-bruin-284822/23p-api-lab:latest"
     registryCredential = 'alien-bruin-284822'
-    dockerImage = ''
+    json_key_file = credentials('alien-bruin-284822')
+    TF_VAR_auth_file = "${json_key_file}"
   }
   agent any
   stages {
     
     
+    
+    stage('Cloning Git') {
+      steps {                       
+            git 'https://github.com/henryhormaza/23p-api-lab.git'
+        }
+    }
     stage('Build_infra') {
         steps {
-            dir("/media/Windows/Codigo/lab/23p_api_lab/Terraform/"){
-                sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file core-waters-284316-892e73a3a61b.json"
+            dir("Terraform/"){
+                sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${json_key_file}"
                 sh "terraform init"
                 sh "terraform apply  -auto-approve "                
                 sh "terraform output -json > /tmp/output.json"   
@@ -22,15 +29,10 @@ pipeline {
             }
         }
     }
-    stage('Cloning Git') {
-      steps {
-          dir("/media/Windows/Codigo/lab/23p_api_lab/"){
-            git 'https://github.com/henryhormaza/23p-api-lab.git'}
-      }
-    }
     stage("Building image"){
         steps{
             script{
+                
                 dockerImage = docker.build("alien-bruin-284822/23p-api-lab:latest",
                     "-f Docker/23p-api-lab.dockerfile .")
             }
@@ -40,6 +42,7 @@ pipeline {
     stage("Pushing Image") {
         steps{
             script{
+                sh "cp /tmp/output.json " 
                 docker.withRegistry('https://us.gcr.io', 'gcr:alien-bruin-284822') {
                     dockerImage.push("latest")
                 }
