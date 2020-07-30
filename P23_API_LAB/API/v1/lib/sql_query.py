@@ -9,11 +9,11 @@ class cls_sql:
 
     def __init__(self):
         with open('/opt/output.json', 'r') as outfile:
-            self.host_name =json.load(outfile)["MySql_instance_IP"]["value"]         
-        #self.host_name = "34.72.216.114" 
-        self.user_name = "23people"
-        self.user_password = "23people"   
-        self.db_name="lab-db-23people"   
+            self.db_conection =json.load(outfile)
+        self.host_name =self.db_conection["MySql_instance_IP"]["value"]                 
+        self.user_name = self.db_conection["db_user_name"]["value"]
+        self.user_password = self.db_conection["db_user_password"]["value"]
+        self.db_name = self.db_conection["db_name"]["value"] 
         self.conn=""         
         self.query_text = ""
         self.j_body={}

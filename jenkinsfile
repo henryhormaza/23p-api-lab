@@ -31,7 +31,7 @@ pipeline {
         steps{
             script{
                 dockerImage = docker.build("alien-bruin-284822/23p-api-lab:latest",
-                    "--build-arg LOCAL_VAR_LAB_DB_IP=192.168.1.1 -f Docker/23p-api-lab.dockerfile .")
+                    "-f Docker/23p-api-lab.dockerfile .")
             }
             
         }

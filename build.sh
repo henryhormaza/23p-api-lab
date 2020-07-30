@@ -1,11 +1,11 @@
 #####################################################
 # Terraform - to build infrastructure
 #####################################################
-cd Terraform/
+##cd Terraform/
 #terraform plan 
 #terraform apply -auto-approve
 #IP_SQL=$(terraform output)
-cd ..
+##cd ..
 
 #####################################################
 # Base Layer image Build

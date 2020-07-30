@@ -109,3 +109,15 @@ output MySql_instance_IP {
   description = "IP address of the master database instance"
   value = google_sql_database_instance.MySql.ip_address.0.ip_address
 }
+output db_user_password {
+  description = "db password for this lab"
+  value = google_sql_user.MySql.password
+}
+output db_user_name {
+  description = "db password for this lab"
+  value = google_sql_user.MySql.password
+}
+output db_name {
+  description = "db password for this lab"
+  value = google_sql_database.MySql_db.name
+}

@@ -47,16 +47,8 @@ resource "google_container_cluster" "gke-cluster" {
     enable_private_endpoint = false
   }
   node_config {
-  # oauth_scopes = [
-  #    "https://www.googleapis.com/auth/devstorage.read_only"
-  #  ]
-  #  workload_metadata_config {
-  #    node_metadata = "GKE_METADATA_SERVER"
-  #  }
+  
   }
-  #workload_identity_config {
-  #  identity_namespace = "${var.project}.svc.id.goog"
-  #}
   provisioner "local-exec"{
     command = "gcloud container clusters get-credentials ${self.name} --region ${var.region} --project ${var.project}"
   }
@@ -125,23 +117,20 @@ resource "google_sql_user" "MySql" {
   project  = var.project
   instance = google_sql_database_instance.MySql.name
   host = var.db_user_host
-  password = var.db_user_password
+  password = random_password.pwd.result
 }
 
-# NW
-#resource "google_compute_network" "vcp_nw" {
-#  name                    = "lab-nw"
-#  auto_create_subnetworks = false
-#  
-#}
+resource "random_password" "pwd" {
+  length = 16
+  special = true
+  override_special = "_%@"
+}
 
-# Subnet
-#resource "google_compute_subnetwork" "vcp_subnet" {
-#  name          = "lab-subnet"
-#  ip_cidr_range = "10.0.0.0/24"
-#  region        = "us-central1"
-#  network       = google_compute_network.vcp_nw.id
-#}
-
-
+resource "random_id" "server" {
+  keepers = {
+    # Generate a new id each time we switch to a new AMI id
+    user_id = "p23_${google_sql_user.MySql.instance}"
+  }
+  byte_length = 4
+}
 
