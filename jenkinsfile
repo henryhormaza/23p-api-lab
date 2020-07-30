@@ -3,7 +3,7 @@ pipeline {
   environment {
     registry = "us.gcr.io/alien-bruin-284822/23p-api-lab:latest"
     registryCredential = 'alien-bruin-284822'
-    json_key_file = credentials('alien-bruin-284822')
+    json_key_file = credentials('alien-bruin-284822-json')
     TF_VAR_auth_file = "${json_key_file}"
   }
   agent any
