@@ -3,8 +3,8 @@ pipeline {
   environment {
     registry = "us.gcr.io/alien-bruin-284822/23p-api-lab:latest"
     registryCredential = 'alien-bruin-284822'
-    json_key_file = credentials('alien-bruin-284822-json')
-    TF_VAR_auth_file = sh("cat ${json_key_file}")
+    //json_key_file = credentials('alien-bruin-284822-json')
+    TF_VAR_auth_file = credentials('alien-bruin-284822-json')
   }
   agent any
   stages {
@@ -19,8 +19,7 @@ pipeline {
     stage('Build_infra') {
         steps {
             dir("Terraform/"){
-                sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${json_key_file}"                
-                sh "echo ${TF_VAR_auth_file}"
+                sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${TF_VAR_auth_file}"                                
                 sh "terraform init"
                 sh "terraform apply  -auto-approve "                
                 sh "terraform output -json > output.json"   
