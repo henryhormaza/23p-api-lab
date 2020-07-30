@@ -1,7 +1,7 @@
 #Backend Config
 terraform {
   backend "gcs" {
-    credentials = "core-waters-284316-892e73a3a61b.json"
+    credentials = "./core-waters-284316-892e73a3a61b.json"
     bucket = "tf-state-23p"
     prefix = "terraform/state"
   }
