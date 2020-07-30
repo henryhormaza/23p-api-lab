@@ -14,6 +14,6 @@ RUN python3 -m pip install -r /opt/requirements.txt
 WORKDIR /opt
 ADD ./P23_API_LAB /opt/P23_API_LAB
 COPY main.py /opt/main.py
-COPY /tmp/output.json /opt/output.json
+COPY ./Terraform/output.json /opt/output.json
 
 CMD ["python3", "/opt/main.py"]

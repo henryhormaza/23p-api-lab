@@ -1,3 +1,4 @@
+def json_output
 pipeline {
   environment {
     registry = "us.gcr.io/alien-bruin-284822/23p-api-lab:latest"
@@ -21,11 +22,12 @@ pipeline {
                 sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${json_key_file}"
                 sh "terraform init"
                 sh "terraform apply  -auto-approve "                
-                sh "terraform output -json > /tmp/output.json"   
+                sh "terraform output -json > output.json"   
+                
                 //script{
-                //        def tf_output = readJSON(file: 'output.json')
-                //    }
-                //sh "echo ${tf_output.MySql_instance_IP.value}"
+                //        json_output = readJSON(file: 'output.json')
+                //   }
+                //sh "echo ${json_output.toString()}"
             }
         }
     }
