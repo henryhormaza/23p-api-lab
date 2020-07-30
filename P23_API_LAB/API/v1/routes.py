@@ -84,13 +84,19 @@ def get_people_id(nationalId):
         return "Not found",404
 
     try:
-            if request.method == 'DELETE': #check API method              
-                #ask for auth in order to avoid usr and passwd burned in code            
-                db_obj.j_body = request.json       
-                #Update
+        if request.method == 'DELETE': #check API method              
+            #ask for auth in order to avoid usr and passwd burned in code            
+            db_obj.j_body = request.json       
+            db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} 
+                                where nationalId = '{nationalId}' '''
+            response["results"]= db_obj.execute_read_query()
+            if response["results"] != []:                                    
+                #Delete
                 db_obj.query_text = f"""DELETE FROM {db_obj.table_name} WHERE nationalId = '{nationalId}' """
                 db_obj.execute_query()                 
                 return "Registry deleted",200
+            else:
+                return "Not found",404
     except:
         return "Not found",404
     
@@ -160,7 +166,9 @@ def get_people():
 def test():
     hostname = socket.gethostname()    
     IPAddr = socket.gethostbyname(hostname)    
-    return f"2 I'm Alive new update, ipadd:{IPAddr} and the hostname:{hostname}",200
+    #return f"2 I'm Alive new update, ipadd:{IPAddr} and the hostname:{hostname}",200
+    with open('/opt/output.json', 'r') as outfile:
+            return json.load(outfile)["MySql_instance_IP"]["value"] 
 
 
 

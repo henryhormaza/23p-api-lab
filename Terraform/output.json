@@ -2,6 +2,6 @@
   "MySql_instance_IP": {
     "sensitive": false,
     "type": "string",
-    "value": "34.72.216.114"
+    "value": "104.154.247.229"
   }
 }
