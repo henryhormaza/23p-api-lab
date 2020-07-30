@@ -127,7 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-
+.json
 # Config GCP
 core-waters-284316-892e73a3a61b.json
 # Terraform State
