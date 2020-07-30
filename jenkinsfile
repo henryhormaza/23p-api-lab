@@ -5,6 +5,7 @@ pipeline {
     registryCredential = 'alien-bruin-284822'
     //json_key_file = credentials('alien-bruin-284822-json')
     TF_VAR_auth_file = credentials('alien-bruin-284822-json')
+    TF_VAR_auth_str = sh "cat ${TF_VAR_auth_file}"
   }
   agent any
   stages {
@@ -21,7 +22,7 @@ pipeline {
             dir("Terraform/"){
                 sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${TF_VAR_auth_file}"                                
                 sh "terraform init -get -backend-config credentials=${TF_VAR_auth_file}"
-                sh "terraform apply  -auto-approve -get -backend-config credentials=${TF_VAR_auth_file}"                
+                sh "terraform apply  -auto-approve"                
                 sh "terraform output -json > output.json"   
                 
                 //script{
