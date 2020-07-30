@@ -166,9 +166,9 @@ def get_people():
 def test():
     hostname = socket.gethostname()    
     IPAddr = socket.gethostbyname(hostname)    
-    #return f"2 I'm Alive new update, ipadd:{IPAddr} and the hostname:{hostname}",200
-    with open('/opt/output.json', 'r') as outfile:
-            return json.load(outfile)["MySql_instance_IP"]["value"] 
+    return f"2 I'm Alive new update, ipadd:{IPAddr} and the hostname:{hostname}",200
+    #with open('/opt/output.json', 'r') as outfile:
+    #        return json.load(outfile)["MySql_instance_IP"]["value"] 
 
 
 

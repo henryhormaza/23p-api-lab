@@ -5,4 +5,4 @@ if __name__ == "__main__":
     #import logging
     #logger = logging.getLogger('waitress')
     #logger.setLevel(logging.DEBUG)
-    serve(app, host="0.0.0.0", port=8001, channel_timeout=1200)
+    serve(app, host="0.0.0.0", port=8000, channel_timeout=1200)
