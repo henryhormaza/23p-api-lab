@@ -1,6 +1,6 @@
 project = "alien-bruin-284822"
 region  = "us-central1"
-auth_file = "core-waters-284316-892e73a3a61b.json"
+#auth_file = "core-waters-284316-892e73a3a61b.json"
 gsa_name = "gsa-p23"
 ksa_name = "ksa-p23"
 app_port = "32532"
