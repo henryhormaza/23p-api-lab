@@ -19,6 +19,7 @@ ARG LOCAL_VAR_LAB_DB_NAME
 WORKDIR /opt
 ADD ./P23_API_LAB /opt/P23_API_LAB
 COPY main.py /opt/main.py
+COPY output.json /opt/output.json
 ENV "VAR_lab_DB_IP"=$LOCAL_VAR_LAB_DB_IP VAR_lab_DB_USER="test" VAR_lab_DB_PWD=$LOCAL_VAR_LAB_DB_PWD VAR_lab_DB_NAME=$LOCAL_VAR_LAB_DB_NAME 
 
 CMD ["python3", "/opt/main.py"]

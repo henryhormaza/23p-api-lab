@@ -49,6 +49,8 @@ def get_people_id(nationalId):
             try:                
                 if nationalId != db_obj.j_body["nationalId"]:
                     SameID=False
+                else:
+                    SameID = True
             except:
                 SameID = True
             try:         
@@ -62,10 +64,11 @@ def get_people_id(nationalId):
                                             WHERE
                                             nationalId = '{nationalId}'
                                             """
-                    db_obj.execute_query() 
-                    db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} 
+                    if json_fields != "nationalId":
+                        db_obj.execute_query() 
+                        db_obj.query_text = f'''SELECT * FROM {db_obj.table_name} 
                                     where nationalId = '{nationalId}' '''
-                    response["results"]=db_obj.execute_read_query()
+                        response["results"]=db_obj.execute_read_query()
                 if response["results"] != [] and SameID:
                     return response,200
                 elif not(SameID):

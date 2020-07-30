@@ -1,11 +1,14 @@
 import mysql.connector
 import base64
+import json
 
 
 class cls_sql:
 
     def __init__(self):
-        self.host_name = "34.72.216.114" 
+        with open('output.json', 'r') as outfile:
+            self.host_name =json.load(outfile)["MySql_instance_IP"]["value"]
+        #self.host_name = "34.72.216.114" 
         self.user_name = "23people"
         self.user_password = "23people"   
         self.db_name="lab-db-23people"   
