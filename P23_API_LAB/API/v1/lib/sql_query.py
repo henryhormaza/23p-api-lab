@@ -4,10 +4,10 @@ import base64
 
 class cls_sql:
 
-    def __init__(self,auth_64):
+    def __init__(self):
         self.host_name = "34.72.216.114" 
-        self.user_name = ""
-        self.user_password = ""   
+        self.user_name = "23people"
+        self.user_password = "23people"   
         self.db_name="lab-db-23people"   
         self.conn=""         
         self.query_text = ""
