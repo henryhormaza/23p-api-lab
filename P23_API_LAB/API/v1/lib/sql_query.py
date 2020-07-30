@@ -15,7 +15,7 @@ class cls_sql:
         self.table_name="23people"
         self.error=""
         self.auth_64=auth_64
-        self.get_decoded64()
+        #self.get_decoded64()
         self.create_connection()
         
 
