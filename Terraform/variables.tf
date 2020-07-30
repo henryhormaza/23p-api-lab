@@ -115,7 +115,7 @@ output db_user_password {
 }
 output db_user_name {
   description = "db password for this lab"
-  value = google_sql_user.MySql.password
+  value = google_sql_user.MySql.name
 }
 output db_name {
   description = "db password for this lab"
