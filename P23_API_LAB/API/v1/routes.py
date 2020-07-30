@@ -10,7 +10,7 @@ people_bp = Blueprint('people_bp',__name__)
 @people_bp.route('/people/<string:nationalId>',methods=['GET','PUT','DELETE'])
 def get_people_id(nationalId):
     #creating the object
-    #db_obj = sql_query.cls_sql(auth_64 = request.headers["Authorization"])
+    db_obj = sql_query.cls_sql()
     response = {}
     try:
         if request.method == 'GET': #check API method  
@@ -96,7 +96,7 @@ def get_people_id(nationalId):
 @people_bp.route('/people',methods=['GET', 'POST'])
 def get_people():
     #creating the object
-    #db_obj = sql_query.cls_sql(auth_64 = request.headers["Authorization"])
+    db_obj = sql_query.cls_sql()
     response = {}
     try:
         if request.method == 'GET': #check API method  
