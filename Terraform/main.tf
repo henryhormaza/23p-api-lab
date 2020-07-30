@@ -50,9 +50,9 @@ resource "google_container_cluster" "gke-cluster" {
    oauth_scopes = [
       "https://www.googleapis.com/auth/devstorage.read_only"
     ]
-  #  workload_metadata_config {
-  #    node_metadata = "GKE_METADATA_SERVER"
-  #  }
+    workload_metadata_config {
+      node_metadata = "GKE_METADATA_SERVER"
+    }
   }
   #workload_identity_config {
   #  identity_namespace = "${var.project}.svc.id.goog"
@@ -72,6 +72,7 @@ resource "google_container_cluster" "gke-cluster" {
   provisioner "local-exec"{
     command = "kubectl get nodes -o wide"
   }  
+  
 }
 
 
