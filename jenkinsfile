@@ -24,9 +24,11 @@ pipeline {
         steps {
             dir("Terraform/"){
                 //sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${TF_VAR_auth_file}"                                
-                sh 'echo ${str_key_file} | base64 -d > ./core-waters-284316-892e73a3a61b.json'
+                //gcloud auth application-default login
+                //writeFile file: './core-waters-284316-892e73a3a61b.json', text: readFile($json_key_file)                
+                //sh 'echo ${json_key_file} > ./core-waters-284316-892e73a3a61b.json'
                 sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file core-waters-284316-892e73a3a61b.json"                                
-                
+                //sh 'cat ./core-waters-284316-892e73a3a61b.json'
                 sh "terraform init"
                 sh "terraform apply  -auto-approve"                
                 sh "terraform output -json > output.json"   
