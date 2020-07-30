@@ -2,7 +2,7 @@
 terraform {
   backend "gcs" {
     credentials = "core-waters-284316-892e73a3a61b.json"
-    bucket = "tf-state-23people"
+    bucket = "tf-state-23p"
     prefix = "terraform/state"
   }
 }
@@ -35,8 +35,6 @@ terraform {
 #  ]
 #}
 
-
-
 # Kubernetes
 resource "google_container_cluster" "gke-cluster" {
   provider = google
@@ -48,44 +46,43 @@ resource "google_container_cluster" "gke-cluster" {
     enable_private_nodes = false
     enable_private_endpoint = false
   }
-  #node_config {
-  # oauth_scopes = [
-  #    "https://www.googleapis.com/auth/devstorage.read_only"
-  #  ]
+  node_config {
+   oauth_scopes = [
+      "https://www.googleapis.com/auth/devstorage.read_only"
+    ]
   #  workload_metadata_config {
   #    node_metadata = "GKE_METADATA_SERVER"
   #  }
+  }
+  #workload_identity_config {
+  #  identity_namespace = "${var.project}.svc.id.goog"
   #}
-  workload_identity_config {
-    identity_namespace = "${var.project}.svc.id.goog"
+  provisioner "local-exec"{
+    command = "gcloud container clusters get-credentials ${self.name} --region ${var.region} --project ${var.project}"
   }
   provisioner "local-exec"{
-    comand = "gcloud container clusters get-credentials ${self.name} --region ${var.region} --project ${var.project}"
-    comand = "kubectl create -f ../k8s/d_Pod.yml"
-    comand = "kubectl create -f ../k8s/s_Cluster.yml"
-    comand = "kubectl create -f k8s/s_NodePort.yml"
-    comand = "gcloud compute firewall-rules create p23-external-access --allow tcp:32532"
+    command = "kubectl create -f ../k8s/d_Pod.yml"
   }
+  provisioner "local-exec"{
+    command = "kubectl create -f ../k8s/s_Cluster.yml"
+  }
+  provisioner "local-exec"{
+    command = "kubectl create -f ../k8s/s_NodePort.yml"
+  }
+  provisioner "local-exec"{
+    command = "kubectl get nodes -o wide"
+  }  
 }
 
+
+#Firewall rules
 resource "google_compute_firewall" "default" {
-  name    = "test-firewall"
-  network = google_compute_network.default.name
-
-  allow {
-    protocol = "icmp"
-  }
-
+  name    = "p23-external-access"
+  network = "default"
   allow {
     protocol = "tcp"
-    ports    = ["80", "8080", "1000-2000"]
+    ports    = ["${var.app_port}"]
   }
-
-  source_tags = ["web"]
-}
-
-resource "google_compute_network" "default" {
-  name = "test-network"
 }
 
 # Mysql instance
@@ -131,16 +128,19 @@ resource "google_sql_user" "MySql" {
 }
 
 # NW
-resource "google_compute_network" "vcp_nw" {
-  name                    = "lab-nw"
-  auto_create_subnetworks = false
-  
-}
+#resource "google_compute_network" "vcp_nw" {
+#  name                    = "lab-nw"
+#  auto_create_subnetworks = false
+#  
+#}
 
 # Subnet
-resource "google_compute_subnetwork" "vcp_subnet" {
-  name          = "lab-subnet"
-  ip_cidr_range = "10.0.0.0/24"
-  region        = "us-central1"
-  network       = google_compute_network.vcp_nw.id
-}
+#resource "google_compute_subnetwork" "vcp_subnet" {
+#  name          = "lab-subnet"
+#  ip_cidr_range = "10.0.0.0/24"
+#  region        = "us-central1"
+#  network       = google_compute_network.vcp_nw.id
+#}
+
+
+

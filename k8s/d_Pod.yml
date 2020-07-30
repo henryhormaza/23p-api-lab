@@ -18,7 +18,7 @@ spec:
     spec:
       
       containers:
-      - image: us.gcr.io/core-waters-284316/23p-api-lab:latest
+      - image: us.gcr.io/alien-bruin-284822/23p-api-lab:latest
         imagePullPolicy: Always
         name: 23p-api-lab
         ports:

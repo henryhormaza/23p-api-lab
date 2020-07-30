@@ -21,9 +21,9 @@ docker build -t 23p-api-lab:latest -f "$(pwd)/Docker/23p-api-lab.dockerfile" . -
 #####################################################
 # Tag and push to container repository
 #####################################################
-docker tag $(docker images 23p-api-lab -q) us.gcr.io/core-waters-284316/23p-api-lab:latest
-docker push us.gcr.io/core-waters-284316/23p-api-lab:latest
-kubectl get nodes -o wide
+docker tag $(docker images 23p-api-lab -q) us.gcr.io/alien-bruin-284822/23p-api-lab:latest
+docker push us.gcr.io/alien-bruin-284822/23p-api-lab:latest
+kubectl rollout restart deploy/p23
 #####################################################
 # K8s -manage and expose Pods
 #####################################################

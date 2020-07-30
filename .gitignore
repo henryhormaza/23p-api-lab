@@ -130,6 +130,6 @@ dmypy.json
 
 # Config GCP
 core-waters-284316-892e73a3a61b.json
-
+*.json
 # Terraform State
 .terraform
