@@ -21,7 +21,7 @@ pipeline {
             dir("Terraform/"){
                 sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${TF_VAR_auth_file}"                                
                 sh "terraform init -get -backend-config credentials=${TF_VAR_auth_file}"
-                sh "terraform apply  -auto-approve "                
+                sh "terraform apply  -auto-approve -get -backend-config credentials=${TF_VAR_auth_file}"                
                 sh "terraform output -json > output.json"   
                 
                 //script{
