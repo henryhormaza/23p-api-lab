@@ -24,7 +24,8 @@ pipeline {
     }
     stage('Cloning Git') {
       steps {
-        git 'https://github.com/henryhormaza/23p-api-lab.git'
+          dir("/media/Windows/Codigo/lab/23p_api_lab/"){
+            git 'https://github.com/henryhormaza/23p-api-lab.git'}
       }
     }
     stage("Building image"){
