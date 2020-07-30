@@ -1,5 +1,5 @@
 provider "google" {
-  credentials = file(./core-waters-284316-892e73a3a61b.json)
+  credentials = file(var.auth_file)
   project     = var.project
   region      = var.region
 }
