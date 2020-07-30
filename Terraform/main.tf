@@ -50,6 +50,9 @@ resource "google_container_cluster" "gke-cluster" {
   
   }
   provisioner "local-exec"{
+    command = "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${var.auth_file}"
+  }
+  provisioner "local-exec"{
     command = "gcloud container clusters get-credentials ${self.name} --region ${var.region} --project ${var.project}"
   }
   provisioner "local-exec"{

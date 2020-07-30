@@ -57,9 +57,10 @@ pipeline {
     stage('Rollout POD Image') {
         steps{
             script{
-                //sh "gcloud auth activate-service-account 'gcr:alien-bruin-284822'"
-                //sh "gcloud container clusters get-credentials p23-cluster --region us-central1 --project alien-bruin-284822"
-                //sh "kubectl rollout restart deploy/p23"                
+                sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${TF_VAR_auth_file}"                                
+                sh "gcloud auth activate-service-account 'gcr:alien-bruin-284822'"
+                sh "gcloud container clusters get-credentials p23-cluster --region us-central1 --project alien-bruin-284822"
+                sh "kubectl rollout restart deploy/p23"                
                 sh "echo 'rollout'"
             }
         }
