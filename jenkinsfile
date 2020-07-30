@@ -1,0 +1,61 @@
+pipeline {
+  environment {
+    registry = "us.gcr.io/alien-bruin-284822/23p-api-lab:latest"
+    registryCredential = 'alien-bruin-284822'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    
+    
+    stage('Build_infra') {
+        steps {
+            dir("/media/Windows/Codigo/lab/23p_api_lab/Terraform/"){
+                sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file core-waters-284316-892e73a3a61b.json"
+                sh "terraform init"
+                sh "terraform apply  -auto-approve "                
+                sh "terraform output -json > output.json"   
+                //script{
+                //        def tf_output = readJSON(file: 'output.json')
+                //    }
+                //sh "echo ${tf_output.MySql_instance_IP.value}"
+            }
+        }
+    }
+    stage('Cloning Git') {
+      steps {
+        git 'https://github.com/henryhormaza/23p-api-lab.git'
+      }
+    }
+    stage("Building image"){
+        steps{
+            script{
+                dockerImage = docker.build("alien-bruin-284822/23p-api-lab:latest",
+                    "--build-arg LOCAL_VAR_LAB_DB_IP='192.168.1.1' -f Docker/23p-api-lab.dockerfile .")
+            }
+            
+        }
+    }
+    stage("Pushing Image") {
+        steps{
+            script{
+                docker.withRegistry('https://us.gcr.io', 'gcr:alien-bruin-284822') {
+                    dockerImage.push("latest")
+                }
+                    
+            }   
+        }
+        
+    }
+    
+    stage('Rollout POD Image') {
+        steps{
+            script{
+                //sh "gcloud auth activate-service-account 'gcr:alien-bruin-284822'"
+                sh "gcloud container clusters get-credentials p23-cluster --region us-central1 --project alien-bruin-284822"
+                sh "kubectl rollout restart deploy/p23"                
+            }
+        }
+    }
+  }
+}

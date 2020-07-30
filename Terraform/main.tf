@@ -47,12 +47,12 @@ resource "google_container_cluster" "gke-cluster" {
     enable_private_endpoint = false
   }
   node_config {
-   oauth_scopes = [
-      "https://www.googleapis.com/auth/devstorage.read_only"
-    ]
-    workload_metadata_config {
-      node_metadata = "GKE_METADATA_SERVER"
-    }
+  # oauth_scopes = [
+  #    "https://www.googleapis.com/auth/devstorage.read_only"
+  #  ]
+  #  workload_metadata_config {
+  #    node_metadata = "GKE_METADATA_SERVER"
+  #  }
   }
   #workload_identity_config {
   #  identity_namespace = "${var.project}.svc.id.goog"
