@@ -3,10 +3,11 @@ pipeline {
   environment {
     registry = "us.gcr.io/alien-bruin-284822/23p-api-lab:latest"
     registryCredential = 'alien-bruin-284822'
-    //json_key_file = credentials('alien-bruin-284822-json')
-    TF_VAR_auth_file = credentials('alien-bruin-284822-json')
+    json_key_file = credentials('alien-bruin-284822-json')
+    str_key_file = credentials('alien-bruin-284822-str')
+    //TF_VAR_auth_file = credentials('alien-bruin-284822-json')
     //'alien-bruin-284822-str'
-    TF_VAR_auth_str = credentials('alien-bruin-284822-str')
+    //TF_VAR_auth_str = credentials('alien-bruin-284822-str')
     //alien-bruin-284822-str
   }
   agent any
@@ -23,12 +24,12 @@ pipeline {
         steps {
             dir("Terraform/"){
                 //sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${TF_VAR_auth_file}"                                
-                sh 'echo ${TF_VAR_auth_str} | base64 -d > core-waters-284316-892e73a3a61b.json'
+                sh 'echo ${str_key_file} | base64 -d > ./core-waters-284316-892e73a3a61b.json'
                 sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file core-waters-284316-892e73a3a61b.json"                                
                 
                 sh "terraform init"
-                //sh "terraform apply  -auto-approve"                
-                //sh "terraform output -json > output.json"   
+                sh "terraform apply  -auto-approve"                
+                sh "terraform output -json > output.json"   
                 
                 //script{
                 //        json_output = readJSON(file: 'output.json')
@@ -63,8 +64,8 @@ pipeline {
     stage('Rollout POD Image') {
         steps{
             script{
-                sh 'echo ${TF_VAR_auth_str} | base64 -d > core-waters-284316-892e73a3a61b.json'                
-                sh 'echo ${TF_VAR_auth_str} | base64 -d > core-waters-284316-892e73a3a61b.json'
+                sh 'echo ${str_key_file} | base64 -d > core-waters-284316-892e73a3a61b.json'                
+                //sh 'echo ${TF_VAR_auth_str} | base64 -d > core-waters-284316-892e73a3a61b.json'
                 sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file core-waters-284316-892e73a3a61b.json"                                
                 sh "gcloud container clusters get-credentials p23-cluster --region us-central1 --project alien-bruin-284822"
                 sh "kubectl rollout restart deploy/p23"                
