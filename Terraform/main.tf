@@ -49,21 +49,21 @@ resource "google_container_cluster" "gke-cluster" {
   node_config {
   
   }
-  provisioner "local-exec"{
-    command = "gcloud container clusters get-credentials ${self.name} --region ${var.region} --project ${var.project}"
-  }
-  provisioner "local-exec"{
-    command = "kubectl create -f ../k8s/d_Pod.yml"
-  }
-  provisioner "local-exec"{
-    command = "kubectl create -f ../k8s/s_Cluster.yml"
-  }
-  provisioner "local-exec"{
-    command = "kubectl create -f ../k8s/s_NodePort.yml"
-  }
-  provisioner "local-exec"{
-    command = "kubectl get nodes -o wide"
-  }  
+  #provisioner "local-exec"{
+  #  command = "gcloud container clusters get-credentials ${self.name} --region ${var.region} --project ${var.project}"
+  #}
+  #provisioner "local-exec"{
+  #  command = "kubectl create -f ../k8s/d_Pod.yml"
+  #}
+  #provisioner "local-exec"{
+  #  command = "kubectl create -f ../k8s/s_Cluster.yml"
+  #}
+  #provisioner "local-exec"{
+  #  command = "kubectl create -f ../k8s/s_NodePort.yml"
+  #}
+  #provisioner "local-exec"{
+  #  command = "kubectl get nodes -o wide"
+  #}  
   
 }
 
