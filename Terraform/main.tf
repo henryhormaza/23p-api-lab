@@ -7,34 +7,6 @@ terraform {
   }
 }
 
-#resource "google_service_account" "gsa" {
-#  account_id = var.gsa_name
-#  project = "core-waters-284316"
-#}
-
-#resource "google_project_iam_member" "cloud-sql-client" {
-#  project = var.project
-#  role = "roles/cloudsql.client"
-#  member = "serviceAccount:${google_service_account.gsa.email}"
-#}
-
-#resource "kubernetes_service_account" "ksa" {
-#  metadata {
-#    name = var.ksa_name
-#   annotations = {
-#      "iam.gke.io/gcp-service-account" = google_service_account.gsa.email
-#    }
-#  }
-#}
-
-#resource "google_service_account_iam_binding" "gke_gsa_ksa_binding" {
-#  service_account_id = google_service_account.gsa.name
-#  role = "roles/iam.workloadIdentityUser"
-#  members = [
-#    "serviceAccount:${var.project}.svc.id.goog[default/${var.ksa_name}]"
-#  ]
-#}
-
 # Kubernetes
 resource "google_container_cluster" "gke-cluster" {
   provider = google
@@ -69,7 +41,6 @@ resource "google_container_cluster" "gke-cluster" {
   }  
   
 }
-
 
 #Firewall rules
 resource "google_compute_firewall" "default" {

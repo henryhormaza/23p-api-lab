@@ -1,79 +1,66 @@
-def json_output
 pipeline {
   environment {
-    registry = "us.gcr.io/alien-bruin-284822/23p-api-lab:latest"
     registryCredential = 'alien-bruin-284822'
     json_key_file = credentials('alien-bruin-284822-json')
     str_key_file = credentials('alien-bruin-284822-str')
-    //TF_VAR_auth_file = credentials('alien-bruin-284822-json')
-    //'alien-bruin-284822-str'
-    //TF_VAR_auth_str = credentials('alien-bruin-284822-str')
-    //alien-bruin-284822-str
   }
   agent any
-  stages {
-    
-    
-    
+  // Get latest code from github
+  stages {    
     stage('Cloning Git') {
       steps {                       
             git 'https://github.com/henryhormaza/23p-api-lab.git'
         }
-    }
+    }    
+    //terraform steps based on github files
     stage('Build_infra') {
         steps {
-            dir("Terraform/"){
-                
-                sh 'echo ${str_key_file} | base64 -d > core-waters-284316-892e73a3a61b.json'
+            dir("Terraform/"){                
+                sh 'echo $str_key_file | base64 -d > core-waters-284316-892e73a3a61b.json'
+                //Grant access to local-exec provider in order to perform kubectl orders
                 sh "gcloud auth activate-service-account --key-file=${json_key_file}"
-                sh "gcloud container clusters get-credentials p23-cluster --region us-central1 --project alien-bruin-284822"
-                //sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${TF_VAR_auth_file}"                                
-                //gcloud auth application-default login
-                //writeFile file: './core-waters-284316-892e73a3a61b.json', text: readFile($json_key_file)                
-                //sh 'echo ${json_key_file} > ./core-waters-284316-892e73a3a61b.json'
-                //sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file core-waters-284316-892e73a3a61b.json"                                
-                //sh 'cat ./core-waters-284316-892e73a3a61b.json'
-                sh "terraform init"
-                //sh "terraform apply  -auto-approve"                
-                //sh "terraform output -json > output.json"   
-                
-                //script{
-                //        json_output = readJSON(file: 'output.json')
-                //   }
-                //sh "echo ${json_output.toString()}"
+                sh "gcloud container clusters get-credentials p23-cluster --region us-central1 --project alien-bruin-284822"  
+                //Backend initialization                          
+                sh "terraform init -backend-config='credentials=${json_key_file}'"            
+                sh "terraform apply  -auto-approve"                
+                //Export some variables
+                sh "terraform output -json > output.json"   
             }
         }
     }
+    //Cleaning the terraform local tf-states to avoid issues with the pipeline
+    stage('Clean Up Terraform backend') {
+        steps {
+            dir ('Terraform/.terraform') {
+                deleteDir()
+                sh "rm *"
+            }
+        }
+    }
+    //Build the docker image with the variables provided by terraform
     stage("Building image"){
         steps{
-            script{
-                
+            script{                
                 dockerImage = docker.build("alien-bruin-284822/23p-api-lab:latest",
                     "-f Docker/23p-api-lab.dockerfile .")
-            }
-            
+            }            
         }
     }
+    // Pushing image to GCP Container registry
     stage("Pushing Image") {
         steps{
             script{
                 
                 docker.withRegistry('https://us.gcr.io', 'gcr:alien-bruin-284822') {
                     dockerImage.push("latest")
-                }
-                    
+                }                    
             }   
-        }
-        
-    }
-    
+        }        
+    }    
+    // force Deploy new image in PODS 
     stage('Rollout POD Image') {
         steps{
-            script{
-                sh 'echo ${str_key_file} | base64 -d > core-waters-284316-892e73a3a61b.json'                
-                //sh 'echo ${TF_VAR_auth_str} | base64 -d > core-waters-284316-892e73a3a61b.json'
-                sh "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file core-waters-284316-892e73a3a61b.json"
-                sh "gcloud container clusters get-credentials p23-cluster --region us-central1 --project alien-bruin-284822"
+            script{                               
                 sh "kubectl rollout restart deploy/p23"                
                 sh "echo 'rollout'"
             }

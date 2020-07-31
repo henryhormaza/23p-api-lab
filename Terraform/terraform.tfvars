@@ -1,6 +1,6 @@
 project = "alien-bruin-284822"
 region  = "us-central1"
-//auth_file = "core-waters-284316-892e73a3a61b.json"
+auth_file = "core-waters-284316-892e73a3a61b.json"
 gsa_name = "gsa-p23"
 ksa_name = "ksa-p23"
 app_port = "32532"
@@ -21,4 +21,4 @@ db_name = "lab-db-23people"
 db_charset = "utf8_general_ci"
 db_user_name = "23people"
 db_user_host = "%"
-#db_user_password = random_password.password.result #"23people"
+
