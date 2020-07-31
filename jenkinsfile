@@ -57,12 +57,12 @@ pipeline {
             }   
         }        
     }    
-    // force Deploy new image in PODS 
+    // force Deploy new image in PODS and get nodes info
     stage('Rollout POD Image') {
         steps{
             script{                               
                 sh "kubectl rollout restart deploy/p23"                
-                sh "echo 'rollout'"
+                sh "kubectl get nodes -o wide"
             }
         }
     }

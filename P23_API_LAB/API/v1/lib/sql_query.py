@@ -23,13 +23,14 @@ class cls_sql:
         #self.get_decoded64()
         self.create_connection()
         
-
+    # Method not used, but usefull to build local basic auth verification (replaced by Apigee)
     def get_decoded64(self):
         self.hash_nd = self.auth_64.replace("Basic ","")
         self.hash_d = str(base64.b64decode(self.hash_nd)).replace("b'","").replace("'","")
         self.user_name = self.hash_d.split(":")[0]
         self.user_password = self.hash_d.split(":")[1]
 
+    # DB connection method
     def create_connection(self):
         self.conn = None
         try:
@@ -43,7 +44,7 @@ class cls_sql:
         except mysql.connector.Error as err:
             print("Error code:", err.msg)
         
-
+    # Perform any MySQL Query but Read
     def execute_query(self):
         cursor = self.conn.cursor()
         try:
@@ -53,8 +54,9 @@ class cls_sql:
             print("Query executed successfully")
         except mysql.connector.Error as error:
             self.error = error
-            print(f"The error '{error}' occurred")            
-    
+            print(f"The error '{error}' occurred")       
+
+    # Perform Read MySQL Query
     def execute_read_query(self):
         cursor = self.conn.cursor()
         result = None
@@ -67,6 +69,7 @@ class cls_sql:
             self.errorFlag = error
             print(f"The error '{error}' occurred")
 
+    # If identify a new DB create the table
     def create_table(self):
         self.query_text = '''
         CREATE TABLE IF NOT EXISTS '''+self.table_name+''' (

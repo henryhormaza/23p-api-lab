@@ -7,6 +7,7 @@ import socket
 #Using blueprint to soport future API versions and routes management at __init__
 people_bp = Blueprint('people_bp',__name__)
 
+#Route to ID Specific API CAll
 @people_bp.route('/people/<string:nationalId>',methods=['GET','PUT','DELETE'])
 def get_people_id(nationalId):
     #creating the object
@@ -101,7 +102,7 @@ def get_people_id(nationalId):
         return "Not found",404
     
 
-#Provide info to api call
+#Route to Unknow id API CAll
 @people_bp.route('/people',methods=['GET', 'POST'])
 def get_people():
     #creating the object
@@ -161,7 +162,7 @@ def get_people():
     except:
         return "Not found",404
 
-    
+# Just a test endpoint    
 @people_bp.route('/test',methods=['GET'])
 def test():
     hostname = socket.gethostname()    

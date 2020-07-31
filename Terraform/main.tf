@@ -21,21 +21,27 @@ resource "google_container_cluster" "gke-cluster" {
   node_config {
   
   }
+  # Auth local excecution
   provisioner "local-exec"{
     command = "gcloud auth activate-service-account service-23people@alien-bruin-284822.iam.gserviceaccount.com --key-file ${var.auth_file}"
   }
+  # Conect to k8s cluster
   provisioner "local-exec"{
     command = "gcloud container clusters get-credentials ${self.name} --region ${var.region} --project ${var.project}"
   }
+  # Create and scale Pods
   provisioner "local-exec"{
     command = "kubectl create -f ../k8s/d_Pod.yml"
   }
+  # Create Service cluster and expose container ports
   provisioner "local-exec"{
     command = "kubectl create -f ../k8s/s_Cluster.yml"
   }
+  # Create Node Port to and expose public port
   provisioner "local-exec"{
     command = "kubectl create -f ../k8s/s_NodePort.yml"
   }
+  # get cluster nodes info
   provisioner "local-exec"{
     command = "kubectl get nodes -o wide"
   }  
@@ -94,17 +100,12 @@ resource "google_sql_user" "MySql" {
   password = random_password.pwd.result
 }
 
+# Generate random DB User PassWd
 resource "random_password" "pwd" {
   length = 16
   special = true
   override_special = "_%@"
 }
 
-resource "random_id" "server" {
-  keepers = {
-    # Generate a new id each time we switch to a new AMI id
-    user_id = "p23_${google_sql_user.MySql.instance}"
-  }
-  byte_length = 4
-}
+
 
