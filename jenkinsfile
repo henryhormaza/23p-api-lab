@@ -33,7 +33,6 @@ pipeline {
         steps {
             dir ('Terraform/.terraform') {
                 deleteDir()
-                sh "rm *"
             }
         }
     }
